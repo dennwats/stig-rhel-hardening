@@ -6,6 +6,11 @@ This project demonstrates how to perform **partial STIG compliance hardening** o
 
 ---
 
+![RHEL 9](https://img.shields.io/badge/RHEL-9-red?logo=redhat)
+![OpenSCAP](https://img.shields.io/badge/OpenSCAP-compliant-blue?logo=linux)
+![Security](https://img.shields.io/badge/STIG-Partial%20Remediation-yellow)
+
+
 ## 📌 Project Goals
 
 - ✅ Understand STIG baseline compliance for RHEL 9
@@ -162,12 +167,6 @@ Included in `screenshots/`:
 - Identifying and interpreting STIG findings
 - Applying common Linux hardening techniques manually
 - Gaining familiarity with tools like `dconf`, `sudoers`, and `dnf`
-
----
-
-## 🧠 Talking Point (for Interviews)
-
-> "I used OpenSCAP with the STIG profile to assess a fresh RHEL 9 system, then manually fixed selected high-priority items. I generated before-and-after compliance reports and used this as a hands-on hardening lab. This demonstrated my understanding of real-world remediation practices, not just automation."
 
 ---
 
