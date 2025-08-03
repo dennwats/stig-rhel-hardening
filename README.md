@@ -199,6 +199,6 @@ stig-rhel-hardening/
 
 ## 🏁 What's Next?
 
-- Extend this project with Ansible-based automation
-- Apply full STIG profile using `--remediate`
-- Build a hardened base image for future use
+- [ ] Add Ansible playbooks to automate these fixes
+- [ ] Apply `--remediate` flag for full remediation test
+- [ ] Build a hardened base image (golden VM template)
