@@ -49,6 +49,8 @@ sudo oscap xccdf eval \
   --report pre-scan-report.html \
   /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 ```
+<img width="1176" height="152" alt="image" src="https://github.com/user-attachments/assets/4f1d0cc1-97e2-4949-9429-c5f568e83ac3" />
+
 
 📄 Output saved to `reports/pre-scan-report.html`
 
@@ -127,6 +129,8 @@ sudo oscap xccdf eval \
   --report post-scan-report.html \
   /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 ```
+<img width="1189" height="152" alt="image" src="https://github.com/user-attachments/assets/07e236b9-59a7-43d2-8d56-99faafc1a3b0" />
+
 
 📄 Output saved to `reports/post-scan-report.html`
 
