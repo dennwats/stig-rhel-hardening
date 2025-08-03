@@ -22,6 +22,8 @@ This project demonstrates how to perform **partial STIG compliance hardening** o
 - SCAP Security Guide (`scap-security-guide`)
 - HTML scan reports
 - GitHub for documentation
+<img width="1164" height="967" alt="Photo 2" src="https://github.com/user-attachments/assets/ac2f6e32-f897-408a-8480-4fb9fc67cb9a" />
+
 
 ---
 
@@ -32,7 +34,8 @@ This project demonstrates how to perform **partial STIG compliance hardening** o
 - **Disk:** 20 GB
 - **OS:** RHEL 9.x
 - **Network:** NAT
-(screenshots/photo1.png)
+<img width="833" height="449" alt="photo 1" src="https://github.com/user-attachments/assets/1e922d17-bc42-4228-81f6-a0ab17ac4646" />
+
 ---
 
 ## 🔍 Pre-Hardening STIG Scan
