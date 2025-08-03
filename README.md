@@ -1,19 +1,23 @@
-This project demonstrates how to perform manual STIG compliance hardening on a RHEL 9 virtual machine using OpenSCAP and the `scap-security-guide`. I used VMware vSphere to deploy a clean VM, ran before-and-after scans, applied key remediations, and documented results.
+# RHEL 9 STIG Partial Hardening Lab (Manual Remediation)
+
+This project demonstrates how to perform **partial STIG compliance hardening** on a RHEL 9 virtual machine using **OpenSCAP** and the `scap-security-guide`. I deployed a clean VM, ran before-and-after scans, applied selected **manual fixes**, and documented results and screenshots.
+
+> ⚠️ Note: This is a **partial demonstration**. I intentionally applied a handful of **manual remediations** to showcase practical skills, not to achieve 100% compliance.
 
 ---
 
 ## 📌 Project Goals
 
-- ✅ Understand STIG security baseline for RHEL 9
-- ✅ Practice manual remediation of common findings
-- ✅ Generate compliance scan reports (before and after)
-- ✅ Document work for portfolio and interviews
+- ✅ Understand STIG baseline compliance for RHEL 9
+- ✅ Practice **manual remediation** of common findings
+- ✅ Generate and compare before/after scan reports
+- ✅ Showcase work as a portfolio project
 
 ---
 
 ## 🧰 Tools Used
 
-- RHEL 9 VM (via vSphere/ESXi)
+- RHEL 9 VM (on vSphere/ESXi)
 - OpenSCAP (`openscap-scanner`)
 - SCAP Security Guide (`scap-security-guide`)
 - HTML scan reports
@@ -21,19 +25,19 @@ This project demonstrates how to perform manual STIG compliance hardening on a R
 
 ---
 
-## 🖥️ System Setup
+## 🖥️ VM Setup
 
 - **VM Name:** `stig-lab.localdomain`
-- **CPU/RAM:** 2 vCPU, 4 GB RAM
+- **vCPU/RAM:** 2 vCPU, 4 GB RAM
 - **Disk:** 20 GB
-- **Network:** NAT
 - **OS:** RHEL 9.x
-
+- **Network:** NAT
+(screenshots/photo1.png)
 ---
 
-## 🔍 STIG Scan – Before Hardening
+## 🔍 Pre-Hardening STIG Scan
 
-Used the following command to generate the baseline compliance report:
+Generated a baseline scan report using OpenSCAP:
 
 ```bash
 sudo oscap xccdf eval \
@@ -43,55 +47,71 @@ sudo oscap xccdf eval \
   /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 ```
 
-📄 Report output: `reports/pre-scan-report.html`
+📄 Output saved to `reports/pre-scan-report.html`
 
 ---
 
-## 🛠️ Manual Remediations (Selected 10)
+## 🛠️ Manual Remediations (Performed)
+
+Below are the specific remediations I manually completed to demonstrate hands-on proficiency with common STIG findings:
+
+### 1. Installed Required Security Tools
+
+Installed entropy and crypto tools:
 
 ```bash
-# 1. Enforce password expiration
-sudo chage --maxdays 90 devops
-
-# 2. Disable SSH root login
-sudo sed -i 's/^PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo systemctl restart sshd
-
-# 3. Enable auditd
-sudo systemctl enable --now auditd
-
-# 4. Disable unused service
-sudo systemctl disable --now avahi-daemon
-
-# 5. Harden /etc/shadow permissions
-sudo chmod 000 /etc/shadow
-
-# 6. Require sudo re-authentication
-sudo visudo
-# Add:
-Defaults timestamp_timeout=0
-
-# 7. Disable Ctrl-Alt-Del reboot key
-sudo dconf write /org/gnome/settings-daemon/plugins/media-keys/logout "''"
-
-# 8. Disable core dumps
-echo '* hard core 0' | sudo tee -a /etc/security/limits.conf
-
-# 9. Enable SELinux in enforcing mode
-sudo setenforce 1
-sudo sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
-
-# 10. Set default umask
-echo "umask 027" | sudo tee -a /etc/profile
+sudo dnf install -y gnutls-utils nss-tools rng-tools
 ```
+(screenshots/'photo 4'.png)
 
-📸 Screenshots available in the `screenshots/` folder
+**Purpose:** Improves system entropy generation, DNSSEC validation, and cryptographic capabilities.
+
+> Dependencies auto-installed: `gnutls-dane`, `jitterentropy`, `unbound-libs`
 
 ---
 
-## 🔁 Post-Remediation Scan
+### 2. Removed Unnecessary Packages
 
-Re-scanned after hardening:
+```bash
+sudo dnf remove -y iputils tuned
+```
+(screenshots/'photo 4-1'.png)
+
+**Purpose:** Reduces the attack surface by removing unused packages like `tuned` and `tuned-profiles`.
+
+---
+
+### 3. Reduced `sudo` Timeout to 0
+
+File modified: `/etc/sudoers`
+
+```bash
+Defaults timestamp_timeout=0
+```
+(screenshots/'photo 4-2'.png)
+
+**Purpose:** Forces re-authentication on every sudo use to limit privilege escalation windows.
+
+---
+
+### 4. Disabled Media Key Logout Shortcut
+
+```bash
+dbus-launch dconf write /org/gnome/settings-daemon/plugins/media-keys/logout '""'
+```
+(screenshots/'photo 4-3'.png)
+
+**Purpose:** Disables hardware logout keys that could bypass auditing or screen lock enforcement.
+
+---
+
+📸 Screenshots for each change are included in the `screenshots/` folder.
+
+---
+
+## 🔁 Post-Hardening Scan
+
+Re-ran OpenSCAP scan after manual fixes:
 
 ```bash
 sudo oscap xccdf eval \
@@ -101,18 +121,7 @@ sudo oscap xccdf eval \
   /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 ```
 
-📄 Report output: `reports/post-scan-report.html`
-
----
-
-## 📸 Screenshots
-
-See the `/screenshots` folder for:
-
-- VM setup
-- Pre-scan results
-- Remediation commands
-- Post-scan results
+📄 Output saved to `reports/post-scan-report.html`
 
 ---
 
@@ -120,28 +129,38 @@ See the `/screenshots` folder for:
 
 | Stage            | Compliance Score |
 |------------------|------------------|
-| Pre-Hardening    | ~47%             |
-| Post-Hardening   | ~78%             |
+| Pre-Hardening    | ~46.59%          |
+| Post-Hardening   | ~55.4%          |
+
+---
+
+## 📸 Screenshots
+
+Included in `screenshots/`:
+
+- VM deployment
+- Pre-scan result
+- Each manual fix
+- Post-scan result
 
 ---
 
 ## 📘 Lessons Learned
 
-- How to use OpenSCAP for STIG scanning
-- How to interpret and act on STIG findings
-- How to harden Linux systems manually
-- Practice with common config files (`/etc/ssh/sshd_config`, `/etc/security/limits.conf`, `/etc/shadow`)
-- Gained hands-on with SELinux, auditing, sudo policy, umask, and more
+- How to run OpenSCAP scans against STIG profiles
+- Identifying and interpreting STIG findings
+- Applying common Linux hardening techniques manually
+- Gaining familiarity with tools like `dconf`, `sudoers`, and `dnf`
 
 ---
 
-## 🧠 Talking Points (For Interview)
+## 🧠 Talking Point (for Interviews)
 
-> "I used OpenSCAP and the STIG profile to audit a fresh RHEL 9 system, then manually remediated 10 high-impact findings. I created before-and-after compliance reports, practiced securing SSH, enforcing password policies, setting SELinux, and hardening default permissions. It was a great deep dive into Linux hardening and system compliance."
+> "I used OpenSCAP with the STIG profile to assess a fresh RHEL 9 system, then manually fixed selected high-priority items. I generated before-and-after compliance reports and used this as a hands-on hardening lab. This demonstrated my understanding of real-world remediation practices, not just automation."
 
 ---
 
-## 📂 Project Structure
+## 📂 Folder Structure
 
 ```bash
 stig-rhel-hardening/
@@ -150,19 +169,26 @@ stig-rhel-hardening/
 │   ├── pre-scan-report.html
 │   └── post-scan-report.html
 ├── screenshots/
-│   ├── vm-setup.png
 │   ├── pre-scan.png
-│   ├── remediation-commands.png
+│   ├── fix-sudo.png
+│   ├── fix-dconf.png
 │   └── post-scan.png
 └── commands.sh
 ```
 
 ---
 
-## 🔗 How to Use
+## 🧪 How to Reproduce
 
-1. Clone the repo
-2. View scan reports in `reports/`
-3. View screenshots in `screenshots/`
-4. Run any hardening command from `commands.sh`
+1. Clone this repo
+2. Use OpenSCAP to scan `ssg-rhel9-ds.xml`
+3. Apply selected fixes manually
+4. View screenshots and reports
 
+---
+
+## 🏁 What's Next?
+
+- Extend this project with Ansible-based automation
+- Apply full STIG profile using `--remediate`
+- Build a hardened base image for future use
