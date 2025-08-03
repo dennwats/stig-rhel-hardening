@@ -62,7 +62,8 @@ Installed entropy and crypto tools:
 ```bash
 sudo dnf install -y gnutls-utils nss-tools rng-tools
 ```
-![Manual Fix 1](screenshots/'photo 4'.png)
+<img width="1037" height="1104" alt="Photo 4" src="https://github.com/user-attachments/assets/7fbe0584-423f-49fc-9726-473497c3cd78" />
+
 
 **Purpose:** Improves system entropy generation, DNSSEC validation, and cryptographic capabilities.
 
@@ -75,7 +76,8 @@ sudo dnf install -y gnutls-utils nss-tools rng-tools
 ```bash
 sudo dnf remove -y iputils tuned
 ```
-![Manual Fix 2](screenshots/'photo 4-1'.png)
+<img width="1263" height="1159" alt="Photo 4-1" src="https://github.com/user-attachments/assets/8fe96d02-b305-41f3-b7b2-a8e020cbcc74" />
+
 
 **Purpose:** Reduces the attack surface by removing unused packages like `tuned` and `tuned-profiles`.
 
@@ -88,7 +90,8 @@ File modified: `/etc/sudoers`
 ```bash
 Defaults timestamp_timeout=0
 ```
-![Manual Fix 3](screenshots/'photo 4-2'.png)
+<img width="712" height="135" alt="Photo 4-2" src="https://github.com/user-attachments/assets/506faf3b-3f6e-429d-8f99-1252832b804d" />
+
 
 **Purpose:** Forces re-authentication on every sudo use to limit privilege escalation windows.
 
@@ -99,7 +102,8 @@ Defaults timestamp_timeout=0
 ```bash
 dbus-launch dconf write /org/gnome/settings-daemon/plugins/media-keys/logout '""'
 ```
-![Manual Fix 4](screenshots/'photo 4-3'.png)
+<img width="888" height="83" alt="Photo 4-3" src="https://github.com/user-attachments/assets/f1eaf3a6-f5ea-45b5-baf5-878d4c177b9f" />
+
 
 **Purpose:** Disables hardware logout keys that could bypass auditing or screen lock enforcement.
 
